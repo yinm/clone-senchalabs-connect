@@ -183,6 +183,20 @@ describe('app', () => {
         .expect(503, done)
     })
 
+    it('should not fire after headers sent', (done) => {
+      app.use((req, res, next) => {
+        res.write('body')
+        res.end()
+        process.nextTick(() => {
+          next(new Error('ack!'))
+        })
+      })
+
+      request(app)
+        .get('/')
+        .expect(200, done)
+    })
+
   })
 
 })
