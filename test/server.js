@@ -83,4 +83,32 @@ describe('app', () => {
       .expect(200, 'oh, boom!', done)
   })
 
+  it('should work as middleware', (done) => {
+    // custom server handler array
+    const handlers = [
+      connect(),
+      (req, res, next) => {
+        res.writeHead(200, {'Content-Type': 'text/plain'})
+        res.end('Ok')
+      },
+    ]
+
+    // execute callbacks in sequence
+    let n = 0
+    function run(req, res) {
+      if (handlers[n]) {
+        handlers[n++](req, res, () => {
+          run(req, res)
+        })
+      }
+    }
+
+    // create a non-connect server
+    const server = http.createServer(run)
+
+    request(server)
+      .get('/')
+      .expect(200, 'Ok', done)
+  })
+
 })
