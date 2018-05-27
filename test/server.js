@@ -27,4 +27,21 @@ describe('app', () => {
       .get('/')
       .expect(200, 'hello, world', done)
   })
+
+  it('should be a callable function', (done) => {
+    app.use((req, res) => {
+      res.end('hello, world!')
+    })
+
+    function handler(req, res) {
+      res.write('oh, ')
+      app(req, res)
+    }
+
+    const server = http.createServer(handler)
+
+    request(server)
+      .get('/')
+      .expect(200, 'oh, hello, world!', done)
+  })
 })
