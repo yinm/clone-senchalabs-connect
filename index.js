@@ -242,4 +242,24 @@ function logerror(err) {
   if (env !== 'test') console.error(err.stack || err.toString())
 }
 
+/**
+ * Get get protocol + host for a URL.
+ *
+ * @param {string} url
+ * @private
+ */
+function getProtohost(url) {
+  if (url.length === 0 || url[0] === '/') {
+    return undefined
+  }
 
+  const searchIndex = url.indexOf('?')
+  const pathLength = searchIndex !== -1
+    ? searchIndex
+    : url.length
+  const fqdnIndex = url.substr(0, pathLength).indexOf('://')
+
+  return fqdnIndex !== -1
+    ? url.substr(0, url.indexOf('/', e + fqdnIndex))
+    : undefined
+}
