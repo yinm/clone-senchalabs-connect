@@ -260,6 +260,6 @@ function getProtohost(url) {
   const fqdnIndex = url.substr(0, pathLength).indexOf('://')
 
   return fqdnIndex !== -1
-    ? url.substr(0, url.indexOf('/', e + fqdnIndex))
+    ? url.substr(0, url.indexOf('/', 3 + fqdnIndex))
     : undefined
 }
