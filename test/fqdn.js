@@ -20,4 +20,16 @@ describe('app.use()', () => {
       .expect(200, 'http://example.com/foo', done)
   })
 
+  describe('with a connect app', () => {
+    it('should ignore FQDN in search', (done) => {
+      app.use('/proxy', (req, res) => {
+        res.end(req.url)
+      })
+
+      rawrequest(app)
+        .get('/proxy?url=http://example.com/blog/post/1')
+        .expect(200, '/?url=http://example.com/blog/post/1', done)
+    })
+  })
+
 })
