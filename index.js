@@ -231,3 +231,15 @@ function call(handle, route, err, req, res, next) {
   // continue
   next(error)
 }
+
+/**
+ * Log error using console.error.
+ *
+ * @param {Error} err
+ * @private
+ */
+function logerror(err) {
+  if (env !== 'test') console.error(err.stack || err.toString())
+}
+
+
