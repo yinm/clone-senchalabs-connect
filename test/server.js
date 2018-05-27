@@ -149,4 +149,16 @@ describe('app', () => {
     })
   })
 
+  describe('error handler', () => {
+    it('should have escaped response body', (done) => {
+      app.use((req, res, next) => {
+        throw new Error('<script>alert()</script>')
+      })
+
+      request(app)
+        .get('/')
+        .expect(500, /&lt;script&gt;alert\(\)&lt;\/script&gt;/, done)
+    })
+  })
+
 })
