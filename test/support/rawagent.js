@@ -46,3 +46,50 @@ RawAgent.prototype._start = function(cb) {
     cb()
   })
 }
+
+function RawRequest(agent, method, path) {
+  this.agent = agent
+  this.method = method
+  this.path = path
+}
+
+RawRequest.prototype.expect = function(status, body, callback) {
+  const request = this
+
+  this.agent._start(function() {
+    let req = http.request({
+      host: '127.0.0.1',
+      method: request.method,
+      path: request.path,
+      port: request.agent._port,
+    })
+
+    req.on('response', function(res) {
+      let buf = ''
+
+      res.setEncoding('utf8')
+      res.on('data', function(s) { buf += s })
+      res.on('end', function() {
+        let err = null
+
+        try {
+          assert.equal(res.statusCode, status, 'expected ' + status + ' status, got ' + res.statusCode)
+
+          if (body instanceof RegExp) {
+            assert.ok(body.test(buf), 'expected body ' + buf + ' to match ' + body)
+          } else {
+            assert.equal(buf, body, 'expectd ' + body + ' response body, got ' + buf)
+          }
+        } catch (e) {
+          err = e
+        }
+
+        request.agent._close(function() {
+          callback(err)
+        })
+      })
+    })
+
+    req.end()
+  })
+}
