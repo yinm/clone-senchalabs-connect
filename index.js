@@ -201,3 +201,33 @@ proto.listen = function() {
   const server = http.createServer(this)
   return server.listen.apply(server, arguments)
 }
+
+/**
+ * Invoke a route handle.
+ * @private
+ */
+function call(handle, route, err, req, res, next) {
+  const arity = handle.length
+  let error = err
+  const hasError = Boolean(err)
+
+  debug('%s %s : %s', handle.name || '<annonymous>', route, req.originalUrl)
+
+  try {
+    if (hasError && arity === 4) {
+      // error-handling middleware
+      handle(err, req, res, next)
+      return
+    } else if (!hasError && arity < 4) {
+      // request-handling middleware
+      handle(req, res, next)
+      return
+    }
+  } catch (e) {
+    // replace the error
+    error = e
+  }
+
+  // continue
+  next(error)
+}
