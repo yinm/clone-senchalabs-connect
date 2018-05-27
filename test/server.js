@@ -159,6 +159,19 @@ describe('app', () => {
         .get('/')
         .expect(500, /&lt;script&gt;alert\(\)&lt;\/script&gt;/, done)
     })
+
+    it('should use custom error code', (done) => {
+      app.use((req, res, next) => {
+        let err = new Error('ack!')
+        err.status = 503
+        throw err
+      })
+
+      request(app)
+        .get('/')
+        .expect(503, done)
+    })
+
   })
 
 })
