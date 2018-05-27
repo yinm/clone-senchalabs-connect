@@ -123,4 +123,12 @@ describe('app', () => {
       .expect(500, done)
   })
 
+  describe('404 handler', () => {
+    it('should escape the 404 response body', (done) => {
+      rawrequest(app)
+        .get('/foo/<script>stuff\'n</script>')
+        .expect(404, />Cannot GET \/foo\/%3Cscript%3Estuff&#39;n%3C\/script%3E</, done)
+    })
+  })
+
 })
