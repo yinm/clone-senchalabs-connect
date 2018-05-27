@@ -16,3 +16,33 @@ function RawAgent(app) {
   this._port = null
   this._server = null
 }
+
+RawAgent.prototype.get = function(path) {
+  return new RawRequest(this, 'GET', path)
+}
+
+RawAgent.prototype._close = function(cb) {
+  if (--this._open) {
+    return process.nextTick(cb)
+  }
+
+  this._server.close(cb)
+}
+
+RawAgent.prototype._start = function(cb) {
+  this._open++
+
+  if (this._port) {
+    return process.nextTick(cb)
+  }
+
+  if (!this.server) {
+    this._server = http.createServer(this.app).listen()
+  }
+
+  let agent = this
+  this._server.on('listening', function() {
+    agent._port = this.address().port
+    cb()
+  })
+}
