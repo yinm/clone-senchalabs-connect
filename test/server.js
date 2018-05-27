@@ -129,6 +129,19 @@ describe('app', () => {
         .get('/foo/<script>stuff\'n</script>')
         .expect(404, />Cannot GET \/foo\/%3Cscript%3Estuff&#39;n%3C\/script%3E</, done)
     })
+
+    it('should not fire after headers sent', (done) => {
+      app.use((req, res, next) => {
+        res.write('body')
+        res.end()
+        process.nextTick(next)
+      })
+
+      request(app)
+        .get('/')
+        .expect(200, done)
+    })
+
   })
 
 })
