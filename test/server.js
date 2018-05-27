@@ -197,6 +197,14 @@ describe('app', () => {
         .expect(200, done)
     })
 
-  })
+    it('should have no body for HEAD', (done) => {
+      app.use((req, res, next) => {
+        throw new Error('ack!')
+      })
 
+      request(app)
+        .head('/')
+        .expect(500, '', done)
+    })
+  })
 })
