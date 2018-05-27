@@ -29,3 +29,17 @@ const defer = typeof setImmediate === 'function'
   ? setImmediate
   : function(fn) { process.nextTick(fn.bind.apply(fn, arguments)) }
 
+/**
+ * Create a new connect server.
+ *
+ * @return {function}
+ * @public
+ */
+function createServer() {
+  function app(req, res, next){ app.handle(req, res, next) }
+  merge(app, proto)
+  merge(app, EventEmitter.prototype)
+  app.route = '/'
+  app.stack = []
+  return app
+}
