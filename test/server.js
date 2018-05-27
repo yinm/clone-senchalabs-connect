@@ -64,4 +64,23 @@ describe('app', () => {
       .expect(200, 'oh, no!', done)
   })
 
+  it('should invoke callback on error', (done) => {
+    app.use((req, res) => {
+      throw new Error('boom!')
+    })
+
+    function handler(req, res) {
+      res.write('oh, ')
+      app(req, res, (err) => {
+        res.end(err.message)
+      })
+    }
+
+    const server = http.createServer(handler)
+
+    request(server)
+      .get('/')
+      .expect(200, 'oh, boom!', done)
+  })
+
 })
