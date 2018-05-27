@@ -60,7 +60,7 @@ function createServer() {
  * @returns {Server} for chaining
  * @public
  */
-proto.use = (route, fn) => {
+proto.use = function(route, fn) {
   let handle = fn
   let path = route
 
@@ -74,7 +74,7 @@ proto.use = (route, fn) => {
   if (typeof handle.handle === 'function') {
     let server = handle
     server.route = path
-    handle = (req, res, next) => {
+    handle = function(req, res, next) {
       server.handle(req, res, next)
     }
   }
@@ -102,7 +102,7 @@ proto.use = (route, fn) => {
  *
  * @private
  */
-proto.handle = (req, res, out) => {
+proto.handle = function(req, res, out) {
   let index = 0
   let protohost = getProtohost(req.url) || ''
   let removed = ''
