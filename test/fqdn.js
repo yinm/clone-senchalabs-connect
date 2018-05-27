@@ -30,6 +30,17 @@ describe('app.use()', () => {
         .get('/proxy?url=http://example.com/blog/post/1')
         .expect(200, '/?url=http://example.com/blog/post/1', done)
     })
+
+    it('should ignore FQDN in path', (done) => {
+      app.use('/proxy', (req, res) => {
+        res.end(req.url)
+      })
+
+      rawrequest(app)
+        .get('/proxy/http://example.com/blog/post/1')
+        .expect(200, '/http://example.com/blog/post/1', done)
+    })
+
   })
 
 })
