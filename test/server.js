@@ -44,4 +44,24 @@ describe('app', () => {
       .get('/')
       .expect(200, 'oh, hello, world!', done)
   })
+
+  it('should invoke callback if request not handled', (done) => {
+    app.use('/foo', (req, res) => {
+      res.end('hello, world!')
+    })
+
+    function handler(req, res) {
+      res.write('oh, ')
+      app(req, res, () => {
+        res.end('no!')
+      })
+    }
+
+    const server = http.createServer(handler)
+
+    request(server)
+      .get('/')
+      .expect(200, 'oh, no!', done)
+  })
+
 })
