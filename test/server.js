@@ -111,4 +111,16 @@ describe('app', () => {
       .expect(200, 'Ok', done)
   })
 
+  it('should escape the 500 response body', (done) => {
+    app.use((req, res, next) => {
+      next(new Error('error!'))
+    })
+
+    request(app)
+      .get('/')
+      .expect(/Error: error!<br>/)
+      .expect(/<br> &nbsp; &nbsp;at/)
+      .expect(500, done)
+  })
+
 })
