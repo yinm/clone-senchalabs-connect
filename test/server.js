@@ -142,6 +142,11 @@ describe('app', () => {
         .expect(200, done)
     })
 
+    it('should have no body for HEAD', (done) => {
+      request(app)
+        .head('/')
+        .expect(404, '', done)
+    })
   })
 
 })
