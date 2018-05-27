@@ -1,1 +1,1 @@
-# clone-senchalabs-connect
+Clone [senchalabs/connect: Connect is a middleware layer for Node.js](https://github.com/senchalabs/connect) for study.
