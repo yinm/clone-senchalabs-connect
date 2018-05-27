@@ -172,6 +172,17 @@ describe('app', () => {
         .expect(503, done)
     })
 
+    it('should keep error statusCode', (done) => {
+      app.use((req, res, next) => {
+        res.statusCode = 503
+        throw new Error('ack!')
+      })
+
+      request(app)
+        .get('/')
+        .expect(503, done)
+    })
+
   })
 
 })
