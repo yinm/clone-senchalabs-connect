@@ -171,3 +171,33 @@ proto.handle = (req, res, out) => {
 
   next()
 }
+
+/**
+ * Listen for connections.
+ *
+ * This method takes the same arguments
+ * as node's `http.Server#listen()`.
+ *
+ * HTTP and HTTPS:
+ *
+ * If you run your application both as HTTP
+ * and HTTPS you may wrap them individually,
+ * since your connect "server" is really just
+ * a JavaScript `Function`.
+ *
+ *  var connect = require('connect')
+ *    , http = require('http')
+ *    , https = require('https')
+ *
+ *  var app = connect()
+ *
+ *  http.createServer(app).listen(80)
+ *  https.createServer(options, app).listen(443)
+ *
+ * @returns {http.Server}
+ * @api public
+ */
+proto.listen = function() {
+  const server = http.createServer(this)
+  return server.listen.apply(server, arguments)
+}
