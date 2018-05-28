@@ -147,6 +147,19 @@ describe('app.use()', () => {
         .get('/blog')
         .expect(200, 'blog', done)
     })
+
+    it('should retain req.originalUrl', (done) => {
+      let app = connect()
+
+      app.use('/blog', (req, res) => {
+        res.end(req.originalUrl)
+      })
+
+      request(app)
+        .get('/blog/post/1')
+        .expect(200, '/blog/post/1', done)
+    })
+
   })
 
 })
