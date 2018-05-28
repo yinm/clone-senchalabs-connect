@@ -227,4 +227,20 @@ describe('app.use()', () => {
     })
   })
 
+  describe('error handling', () => {
+    it('should send errors to arity 4 fns', (done) => {
+      app.use((req, res, next) => {
+        next(new Error('msg'))
+      })
+
+      app.use((err, req, res, next) => {
+        res.end(`got error ${err.message}`)
+      })
+
+      request(app)
+        .get('/')
+        .expect('got error msg', done)
+    })
+  })
+
 })
