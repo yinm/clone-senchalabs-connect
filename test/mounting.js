@@ -79,6 +79,19 @@ describe('app.use()', () => {
     app.use('/Blog', blog)
 
     request(app)
+      .get('/Blog')
+      .expect('blog', done)
+  })
+
+  it('should be case insensitive (mixed-case route, lower-case request)', (done) => {
+    const blog = http.createServer((req, res) => {
+      assert.equal(req.url, '/')
+      res.end('blog')
+    })
+
+    app.use('/Blog', blog)
+
+    request(app)
       .get('/blog')
       .expect('blog', done)
   })
