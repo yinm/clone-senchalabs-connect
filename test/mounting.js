@@ -241,6 +241,26 @@ describe('app.use()', () => {
         .get('/')
         .expect('got error msg', done)
     })
+
+    it('should skip to non-error middleware', (done) => {
+      let invoked = false
+
+      app.use((req, res, next) => {
+        next(new Error('msg'))
+      })
+      app.use((req, res, next) => {
+        invoked = true
+        next()
+      })
+      app.use((err, req, res, next) => {
+        res.end(invoked ? 'invoked' : err.message)
+      })
+
+      request(app)
+        .get('/')
+        .expect(200, 'msg', done)
+    })
+
   })
 
 })
