@@ -185,6 +185,18 @@ describe('app.use()', () => {
         .expect('blog', done)
     })
 
+    it('should set .route', () => {
+      let blog = connect()
+      let admin = connect()
+
+      app.use('/blog', blog)
+      blog.use('/admin', admin)
+
+      assert.equal(app.route, '/')
+      assert.equal(blog.route, '/blog')
+      assert.equal(admin.route, '/admin')
+    })
+
   })
 
 })
