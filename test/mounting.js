@@ -109,4 +109,27 @@ describe('app.use()', () => {
       .expect('blog', done)
   })
 
+  it('should ignore fn.arity > 4', (done) => {
+    let invoked = []
+
+    app.use((req, res, next, _a, _b) => {
+      invoked.push(0)
+      next()
+    })
+
+    app.use((req, res, next) => {
+      invoked.push(1)
+      next(new Error('err'))
+    })
+
+    app.use((err, req, res, next) => {
+      invoked.push(2)
+      res.end(invoked.join(','))
+    })
+
+    request(app)
+      .get('/')
+      .expect(200, '1,2', done)
+  })
+
 })
