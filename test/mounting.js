@@ -279,6 +279,24 @@ describe('app.use()', () => {
         .expect(200, 'pass: boom!', done)
     })
 
+    it('should stack error fns', (done) => {
+      app.use((req, res, next) => {
+        next(new Error('msg'))
+      })
+      app.use((err, req, res, next) => {
+        res.setHeader('X-Error', err.message)
+        next(err)
+      })
+      app.use((err, req, res, next) => {
+        res.end(`got error ${err.message}`)
+      })
+
+      request(app)
+        .get('/')
+        .expect('X-Error', 'msg')
+        .expect(200, 'got error msg', done)
+    })
+
   })
 
 })
