@@ -132,4 +132,21 @@ describe('app.use()', () => {
       .expect(200, '1,2', done)
   })
 
+  describe('with a connect app', () => {
+    it('should mount', (done) => {
+      let blog = connect()
+
+      blog.use((req, res) => {
+        assert.equal(req.url, '/')
+        res.end('blog')
+      })
+
+      app.use('/blog', blog)
+
+      request(app)
+        .get('/blog')
+        .expect(200, 'blog', done)
+    })
+  })
+
 })
