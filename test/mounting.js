@@ -50,4 +50,14 @@ describe('app.use()', () => {
       .expect(200, done)
   })
 
+  it('should not match shorter path', (done) => {
+    app.use('/blog-o-rama', (req, res) => {
+      res.end(req.url)
+    })
+
+    request(app)
+      .get('/blog')
+      .expect(404, done)
+  })
+
 })
