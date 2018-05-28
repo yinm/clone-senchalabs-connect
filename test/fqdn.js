@@ -51,6 +51,20 @@ describe('app.use()', () => {
         .expect(200, 'http://example.com/post/1', done)
     })
 
+    it('should adjust FQDN req.url with multiple handlers', (done) => {
+      app.use((req, res, next) => {
+        next()
+      })
+
+      app.use('/blog', (req, res) => {
+        res.end(req.url)
+      })
+
+      rawrequest(app)
+        .get('http://example.com/blog/post/1')
+        .expect(200, 'http://example.com/post/1', done)
+    })
+
   })
 
 })
