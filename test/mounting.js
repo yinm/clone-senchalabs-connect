@@ -197,6 +197,20 @@ describe('app.use()', () => {
       assert.equal(admin.route, '/admin')
     })
 
+    it('should not add trailing slash to req.url', (done) => {
+      app.use('/admin', (req, res, next) => {
+        next()
+      })
+
+      app.use((req, res, next) => {
+        res.end(req.url)
+      })
+
+      request(app)
+        .get('/admin')
+        .expect('/admin', done)
+    })
+
   })
 
 })
