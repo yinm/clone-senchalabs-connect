@@ -261,6 +261,24 @@ describe('app.use()', () => {
         .expect(200, 'msg', done)
     })
 
+    it('should start at error middleware declared after error', (done) => {
+      let invoked = false
+
+      app.use((err, req, res, next) => {
+        res.end(`fail: ${err.message}`)
+      })
+      app.use((req, res, next) => {
+        next(new Error('boom!'))
+      })
+      app.use((err, req, res, next) => {
+        res.end(`pass: ${err.message}`)
+      })
+
+      request(app)
+        .get('/')
+        .expect(200, 'pass: boom!', done)
+    })
+
   })
 
 })
