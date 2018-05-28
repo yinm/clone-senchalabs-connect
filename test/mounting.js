@@ -30,4 +30,14 @@ describe('app.use()', () => {
       .expect(200, '/', done)
   })
 
+  it('should match left-side of path', (done) => {
+    app.use('/blog', (req, res) => {
+      res.end(req.url)
+    })
+
+    request(app)
+      .get('/blog/article/1')
+      .expect(200, '/article/1', done)
+  })
+
 })
