@@ -297,6 +297,18 @@ describe('app.use()', () => {
         .expect(200, 'got error msg', done)
     })
 
-  })
+    it('should invoke error stack even when headers sent', (done) => {
+      app.use((req, res, next) => {
+        res.end('0')
+        next(new Error('msg'))
+      })
+      app.use((err, req, res, next) => {
+        done()
+      })
 
+      request(app)
+        .get('/')
+        .end(() => {})
+    })
+  })
 })
