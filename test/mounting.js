@@ -40,4 +40,14 @@ describe('app.use()', () => {
       .expect(200, '/article/1', done)
   })
 
+  it('should match up to dot', (done) => {
+    app.use('/blog', (req, res) => {
+      res.end(req.url)
+    })
+
+    request(app)
+      .get('/blog.json')
+      .expect(200, done)
+  })
+
 })
