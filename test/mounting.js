@@ -160,6 +160,16 @@ describe('app.use()', () => {
         .expect(200, '/blog/post/1', done)
     })
 
+    it('should adjust req.url', (done) => {
+      app.use('/blog', (req, res) => {
+        res.end(req.url)
+      })
+
+      request(app)
+        .get('/blog/post/1')
+        .expect(200, '/post/1', done)
+    })
+
   })
 
 })
