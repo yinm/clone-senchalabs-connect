@@ -20,4 +20,14 @@ describe('app.use()', () => {
       .expect(200, '/blog', done)
   })
 
+  it('should match full path', (done) => {
+    app.use('/blog', (req, res) => {
+      res.end(req.url)
+    })
+
+    request(app)
+      .get('/blog')
+      .expect(200, '/', done)
+  })
+
 })
