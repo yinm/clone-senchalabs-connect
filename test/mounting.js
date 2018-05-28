@@ -170,6 +170,21 @@ describe('app.use()', () => {
         .expect(200, '/post/1', done)
     })
 
+    it('should strip trailing slash', (done) => {
+      let blog = connect()
+
+      blog.use((req, res) => {
+        assert.equal(req.url, '/')
+        res.end('blog')
+      })
+
+      app.use('/blog/', blog)
+
+      request(app)
+        .get('/blog')
+        .expect('blog', done)
+    })
+
   })
 
 })
