@@ -1,6 +1,4 @@
-const assert = require('assert')
 const connect = require('..')
-const http = require('http')
 const rawrequest = require('./support/rawagent')
 
 describe('app.use()', () => {
@@ -65,6 +63,18 @@ describe('app.use()', () => {
         .expect(200, 'http://example.com/post/1', done)
     })
 
-  })
+    it('should adjust FQDN req.url with multiple routed handlers', (done) => {
+      app.use('/blog', (req, res, next) => {
+        next()
+      })
 
+      app.use('/blog', (req, res) => {
+        res.end(req.url)
+      })
+
+      rawrequest(app)
+        .get('http://example.com/blog/post/1')
+        .expect(200, 'http://example.com/post/1', done)
+    })
+  })
 })
