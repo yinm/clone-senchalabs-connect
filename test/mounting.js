@@ -60,4 +60,14 @@ describe('app.use()', () => {
       .expect(404, done)
   })
 
+  it('should not end match in middle of component', (done) => {
+    app.use('/blog', (req, res) => {
+      res.end(req.url)
+    })
+
+    request(app)
+      .get('/blog-o-rama/article/1')
+      .expect(404, done)
+  })
+
 })
