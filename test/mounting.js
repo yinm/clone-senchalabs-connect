@@ -210,7 +210,21 @@ describe('app.use()', () => {
         .get('/admin')
         .expect('/admin', done)
     })
+  })
 
+  describe('with a node app', () => {
+    it('should mount', (done) => {
+      const blog = http.createServer((req, res) => {
+        assert.equal(req.url, '/')
+        res.end('blog')
+      })
+
+      app.use('/blog', blog)
+
+      request(app)
+        .get('/blog')
+        .expect('blog', done)
+    })
   })
 
 })
